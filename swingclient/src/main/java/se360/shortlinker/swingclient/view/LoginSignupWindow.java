@@ -15,7 +15,7 @@ import java.awt.event.ActionEvent;
 
 public class LoginSignupWindow {
     private final JFrame frame;
-    private final static LoginSignupService loginSignupService = Main.loginSignupService;
+    private static final LoginSignupService loginSignupService = Main.loginSignupService;
     @Getter
     private JPanel panel0;
     private JButton loginButton;
@@ -80,7 +80,7 @@ public class LoginSignupWindow {
         loginButton.addActionListener((ActionEvent e) -> {
             String username = usernameField.getText();
             String email = emailField.getText();
-            String password = passwordField.getText();
+            String password = new String(passwordField.getPassword());
 
             UserCredentialsDTO userCredentialsDTO = new UserCredentialsDTO(username, password, email);
 
@@ -105,7 +105,32 @@ public class LoginSignupWindow {
                 exception.printStackTrace();
                 JOptionPane.showMessageDialog(frame, "Unexpected exception (IDK)!");
             }
+        });
 
+        signUpButton.addActionListener((ActionEvent e) -> {
+            String username = usernameField.getText();
+            String email = emailField.getText();
+            String password = new String(passwordField.getPassword());
+
+            UserCredentialsDTO userCredentialsDTO = new UserCredentialsDTO(username, password, email);
+
+            try {
+                User user = loginSignupService.signup(userCredentialsDTO);
+                frame.setContentPane(new UserDetailsWindow(frame, user).getPanel0());
+                frame.setVisible(true);
+            }
+            catch (ForbiddenException exception){
+                exception.printStackTrace();
+                JOptionPane.showMessageDialog(frame, "403, Forbidden (username already exists)!");
+            }
+            catch (JsonProcessingException exception){
+                exception.printStackTrace();
+                JOptionPane.showMessageDialog(frame, "JsonProcessingException (IDK)!");
+            }
+            catch (Exception exception) {
+                exception.printStackTrace();
+                JOptionPane.showMessageDialog(frame, "Unexpected exception (IDK)!");
+            }
         });
     }
 }

@@ -12,13 +12,21 @@ import se360.shortlinker.swingclient.model.User;
 import se360.shortlinker.swingclient.model.UserCredentialsDTO;
 
 public class LoginSignupService {
-    public final static String API_URL = Main.API_URL;
-    public final static Client client = Main.client;
+    public static final String API_URL = Main.API_URL;
+    public static final Client client = Main.client;
     public User login(UserCredentialsDTO uC) throws JsonProcessingException {
 
         WebTarget webTarget = client.target((API_URL + "/user/details"));
         Invocation.Builder builder = webTarget.request();
         String response = builder.post(Entity.entity(uC, MediaType.APPLICATION_JSON_TYPE), String.class);
+
+        return Main.objectMapper.readValue(response, new TypeReference<User>() {});
+    }
+
+    public User signup(UserCredentialsDTO user) throws JsonProcessingException {
+        WebTarget webTarget = client.target((API_URL + "/user/add"));
+        Invocation.Builder builder = webTarget.request();
+        String response = builder.post(Entity.entity(user, MediaType.APPLICATION_JSON_TYPE), String.class);
 
         return Main.objectMapper.readValue(response, new TypeReference<User>() {});
     }
