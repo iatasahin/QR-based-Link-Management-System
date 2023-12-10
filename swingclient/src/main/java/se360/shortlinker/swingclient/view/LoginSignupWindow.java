@@ -12,6 +12,8 @@ import se360.shortlinker.swingclient.service.LoginSignupService;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class LoginSignupWindow {
     private final JFrame frame;
@@ -76,6 +78,22 @@ public class LoginSignupWindow {
         signUpButton.setSize(400, 20);
         signUpButton.setLocation(200, 350);
         panel0.add(signUpButton);
+
+        loginButton.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER)
+                    loginButton.doClick();
+            }
+        });
+
+        signUpButton.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER)
+                    signUpButton.doClick();
+            }
+        });
 
         loginButton.addActionListener((ActionEvent e) -> {
             String username = usernameField.getText();
