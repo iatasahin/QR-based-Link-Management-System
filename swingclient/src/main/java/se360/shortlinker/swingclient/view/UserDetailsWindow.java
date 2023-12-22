@@ -26,6 +26,8 @@ public class UserDetailsWindow {
         this.frame = frame;
         this.user = user;
 
+        System.out.println(user);
+
         initialize();
     }
 
@@ -61,6 +63,18 @@ public class UserDetailsWindow {
         createdField.setLocation(120, 50);
         panel0.add(createdField);
 
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.setSize(150, 20);
+        logoutButton.setLocation(10, 80);
+        logoutButton.addActionListener(e -> logout());
+        panel0.add(logoutButton);
+
+        JButton createLinkButton = new JButton("Create New Link");
+        createLinkButton.setSize(150, 20);
+        createLinkButton.setLocation(170, 80);
+        createLinkButton.addActionListener(e -> createNewLink());
+        panel0.add(createLinkButton);
+
         JButton followLinkButton = new JButton("Follow Link");
         followLinkButton.setSize(150, 20);
         followLinkButton.setLocation(630, 5);
@@ -90,6 +104,25 @@ public class UserDetailsWindow {
         tablePanel.setSize(800, 490);
         tablePanel.setLocation(0, 105);
         panel0.add(tablePanel);
+    }
+
+    private void logout() {
+        frame.setContentPane(new LoginSignupWindow(frame).getPanel0());
+        frame.setVisible(true);
+    }
+
+    private void createNewLink() {
+        String name = JOptionPane.showInputDialog(frame, "Enter link name:");
+        if (name == null || name.isBlank()) {
+            JOptionPane.showMessageDialog(frame, "Please enter a valid name.");
+            return;
+        }
+        String url = JOptionPane.showInputDialog(frame, "Enter link URL:");
+        if (url == null || url.isBlank()) {
+            JOptionPane.showMessageDialog(frame, "Please enter a valid URL.");
+            return;
+        }
+        // todo create link request to server
     }
 
     private void followLink() {

@@ -14,10 +14,10 @@ public class Link {
     private Long id;
 
     @Getter @Setter
-    private String url;
+    private String name;
 
     @Getter @Setter
-    private String shortUrl;
+    private String url;
 
     @Getter @Setter
     private Long clicks;
@@ -29,13 +29,4 @@ public class Link {
 
     @Getter @Setter
     private Instant createdAt;
-
-    @Getter @Setter
-    private Instant updatedAt;
-
-    @Getter @Setter
-    private Instant deletedAt;
-
-    @Getter @Setter
-    private Boolean deleted;
 }

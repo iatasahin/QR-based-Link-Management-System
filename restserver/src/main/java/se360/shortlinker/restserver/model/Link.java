@@ -15,42 +15,28 @@ import java.time.Instant;
 public class Link {
     @Id @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Long id;
 
     @Getter @Setter
-    @Column(name = "url", nullable = false)
+    @Column(name = "name")
+    private String name;
+
+    @Getter @Setter
+    @Column(name = "url")
     private String url;
 
     @Getter @Setter
-    @Column(name = "short_url", nullable = false, unique = true)
-    private String shortUrl;
-
-    @Getter @Setter
-    @Column(name = "clicks", nullable = false)
+    @Column(name = "clicks")
     private Long clicks;
 
     @Getter @Setter
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     @JsonBackReference
     private User user;
 
     @Getter @Setter
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private Instant createdAt;
-
-    @Getter @Setter
-    @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
-
-    @Getter @Setter
-    @Column(name = "deleted_at", nullable = true)
-    private Instant deletedAt;
-
-    @Getter @Setter
-    @Column(name = "deleted", nullable = false)
-    private Boolean deleted;
-
-
 }

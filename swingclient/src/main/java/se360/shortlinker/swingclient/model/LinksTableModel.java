@@ -9,7 +9,7 @@ import java.util.List;
 
 public class LinksTableModel extends AbstractTableModel {
     private List<Link> links;
-    private String[] columnNames = {"id", "#Clicks", "created", "short", "long"/*, ""*/};
+    private String[] columnNames = {"ID", "Name", "#Clicks", "CreationTime", "URL"/*, ""*/};
     public LinksTableModel(List<Link> links) {
         this.links = links;
     }
@@ -41,13 +41,13 @@ public class LinksTableModel extends AbstractTableModel {
         Link link = links.get(rowIndex);
         return switch (columnIndex) {
             case 0 -> link.getId();
-            case 1 -> link.getClicks();
-            case 2 -> {
+            case 1 -> link.getName();
+            case 2 -> link.getClicks();
+            case 3 -> {
                 Instant instant = link.getCreatedAt();
                 LocalDateTime createdAt = LocalDateTime.ofInstant(instant, java.time.ZoneId.systemDefault());
                 yield createdAt.format(Main.formatter);
             }
-            case 3 -> link.getShortUrl();
             case 4 -> link.getUrl();
             default -> throw new IllegalStateException("Unexpected column index: " + columnIndex);
         };

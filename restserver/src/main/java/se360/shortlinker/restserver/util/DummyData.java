@@ -31,11 +31,9 @@ public class DummyData {
             for (int i = 0; i < 100; i++) {
                 Link link = Link.builder()
                         .url("https://www.google.com/" + i)
-                        .shortUrl("https://www.goo.gl/" + i)
+                        .name("linkName" + i)
                         .clicks((long) i * i)
-                        .deleted(false)
                         .createdAt(Instant.now())
-                        .updatedAt(Instant.now())
                         .user(userService.getUserById((long) i % 10 +1))
                         .build();
                 linkService.addLink(link);
