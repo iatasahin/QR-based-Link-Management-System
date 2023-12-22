@@ -1,11 +1,15 @@
 package se360.shortlinker.swingclient.model;
 
+import se360.shortlinker.swingclient.Main;
+
 import javax.swing.table.AbstractTableModel;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class LinksTableModel extends AbstractTableModel {
     private List<Link> links;
-    private String[] columnNames = {"id", "aField01", "aField02", "aBigDecimal", "aDouble"};
+    private String[] columnNames = {"id", "#Clicks", "created", "short", "long"/*, ""*/};
     public LinksTableModel(List<Link> links) {
         this.links = links;
     }
@@ -24,15 +28,27 @@ public class LinksTableModel extends AbstractTableModel {
         return columnNames.length;
     }
 
+    public void removeRow(int row){
+        //todo delete sout
+        System.out.println("deleting" + row);
+
+        links.remove(row);
+        fireTableRowsDeleted(row, row);
+    }
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Link link = links.get(rowIndex);
         return switch (columnIndex) {
             case 0 -> link.getId();
-//            case 1 -> link.getShortLink();
-//            case 2 -> link.getLongLink();
-//            case 3 -> link.getCreatedAt();
-//            case 4 -> link.getUpdatedAt();
+            case 1 -> link.getClicks();
+            case 2 -> {
+                Instant instant = link.getCreatedAt();
+                LocalDateTime createdAt = LocalDateTime.ofInstant(instant, java.time.ZoneId.systemDefault());
+                yield createdAt.format(Main.formatter);
+            }
+            case 3 -> link.getShortUrl();
+            case 4 -> link.getUrl();
             default -> throw new IllegalStateException("Unexpected column index: " + columnIndex);
         };
     }

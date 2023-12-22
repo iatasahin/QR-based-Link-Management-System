@@ -23,4 +23,10 @@ public class LinkService {
     public List<Link> getLinksByUserId(Long id) {
         return linkRepository.findByUser_Id(id);
     }
+
+    public Link incrementAndGetLink(String id) throws NullPointerException, NumberFormatException {
+        Link link = linkRepository.findById(Long.parseLong(id)).orElse(null);
+        link.setClicks(link.getClicks() + 1);
+        return linkRepository.save(link);
+    }
 }
