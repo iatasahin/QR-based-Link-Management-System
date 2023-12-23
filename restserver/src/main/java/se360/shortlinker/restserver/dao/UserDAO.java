@@ -5,9 +5,11 @@ import org.springframework.stereotype.Component;
 import se360.shortlinker.restserver.RestserverApplication;
 import se360.shortlinker.restserver.model.Link;
 import se360.shortlinker.restserver.model.User;
+import se360.shortlinker.restserver.model.UserCredentialsDTO;
 import se360.shortlinker.restserver.util.DBUtil;
 
 import java.sql.*;
+import java.time.Instant;
 import java.util.List;
 
 @Component
@@ -17,8 +19,19 @@ public class UserDAO {
     private static final String SELECT_USER_BY_ID_SQL = "SELECT * FROM users WHERE id = ?";
     private static final String SELECT_USER_BY_USERNAME_SQL = "SELECT * FROM users WHERE username = ?";
 
-    public void saveUser(User user) {
-        if(user.getId() == null) user.setId(DBUtil.getNextUserId());
+    public User saveUser(UserCredentialsDTO uC) {
+        User user = User.builder()
+                .username(uC.getUsername())
+                .password(uC.getPassword())
+                .email(uC.getEmail())
+                .links(new java.util.ArrayList<>())
+                .build();
+        return saveUser(user);
+    }
+
+    public User saveUser(User user) {
+        if (user.getId() == null) user.setId(DBUtil.getNextUserId());
+        if (user.getCreatedAt() == null) user.setCreatedAt(Instant.now());
         try (Connection connection = DriverManager.getConnection(DBUtil.jdbcUrl);
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER_SQL)) {
             preparedStatement.setLong(1, user.getId());
@@ -30,6 +43,7 @@ public class UserDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return user;
     }
 
     public User getUserById(Long id) {
@@ -39,7 +53,7 @@ public class UserDAO {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())
-                user =  mapToUser(resultSet);
+                user = mapToUser(resultSet);
             else return null;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -57,7 +71,7 @@ public class UserDAO {
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())
-                user =  mapToUser(resultSet);
+                user = mapToUser(resultSet);
             else return null;
         } catch (SQLException e) {
             e.printStackTrace();

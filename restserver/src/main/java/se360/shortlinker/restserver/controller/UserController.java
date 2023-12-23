@@ -15,9 +15,8 @@ public class UserController {
     private final UserDAO userDAO;
 
     @PostMapping("/add")
-    public User addUser(@RequestBody User user) {
-        userDAO.saveUser(user);
-        return user;
+    public User addUser(@RequestBody UserCredentialsDTO uC) {
+        return userDAO.saveUser(uC);
     }
 
     @PostMapping("/details")
