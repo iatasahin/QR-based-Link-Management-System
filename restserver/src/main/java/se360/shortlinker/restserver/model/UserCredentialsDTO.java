@@ -5,14 +5,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Getter @Setter
 public class UserCredentialsDTO {
-    @Getter
-    @Setter
     private String username;
-
-    @Getter @Setter
     private String password;
-
-    @Getter @Setter
     private String email;
 }

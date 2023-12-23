@@ -10,32 +10,13 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @ToString @EqualsAndHashCode
+@Getter @Setter
 public class User {
-    @Getter @Setter
     private Long id;
-
-    @Getter @Setter
     private String username;
-
-    @Getter @Setter
     private String password;
-
-    @Getter @Setter
     private String email;
-
-    @Getter @Setter
     @JsonManagedReference
     private List<Link> links;
-
-    @Getter @Setter
     private Instant createdAt;
-
-    @Getter @Setter
-    private Instant updatedAt;
-
-    @Getter @Setter
-    private Instant deletedAt;
-
-    @Getter @Setter
-    private Boolean deleted;
 }
