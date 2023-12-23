@@ -17,9 +17,9 @@ import java.awt.event.KeyEvent;
 
 public class LoginSignupWindow {
     private final JFrame frame;
-    private static final LoginSignupService loginSignupService = Main.loginSignupService;
     @Getter
     private JPanel panel0;
+    private static final LoginSignupService loginSignupService = Main.loginSignupService;
     private JButton loginButton;
     private JButton signUpButton;
 

@@ -1,7 +1,5 @@
 package se360.shortlinker.restserver.model;
 
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import java.time.Instant;
@@ -9,13 +7,14 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
+@EqualsAndHashCode
 @Getter @Setter
-public class Link {
+public class LinkDTO {
     private Long id;
     private String name;
     private String url;
     private Long clicks;
-    @JsonBackReference
-    private User user;
+    private Long user_id;
     private Instant createdAt;
 }

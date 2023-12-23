@@ -1,10 +1,13 @@
 package se360.shortlinker.swingclient.view;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.zxing.WriterException;
 import lombok.Getter;
 import se360.shortlinker.swingclient.Main;
+import se360.shortlinker.swingclient.model.LinkDTO;
 import se360.shortlinker.swingclient.model.LinksTableModel;
 import se360.shortlinker.swingclient.model.User;
+import se360.shortlinker.swingclient.service.LinkService;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,10 +20,11 @@ import java.time.LocalDateTime;
 
 public class UserDetailsWindow {
     private final JFrame frame;
-    private final User user;
     @Getter
     private JPanel panel0;
-    JTable table;
+    private static final LinkService linkService = Main.linkService;
+    private final User user;
+    private JTable table;
 
     public UserDetailsWindow(JFrame frame, User user) {
         this.frame = frame;
@@ -122,7 +126,20 @@ public class UserDetailsWindow {
             JOptionPane.showMessageDialog(frame, "Please enter a valid URL.");
             return;
         }
-        // todo create link request to server
+        LinkDTO linkDTO = LinkDTO.builder()
+                .name(name)
+                .url(url)
+                .clicks(0L)
+                .user_id(user.getId())
+                .build();
+        try {
+            User user = linkService.createLink(linkDTO);
+            frame.setContentPane(new UserDetailsWindow(frame, user).getPanel0());
+            frame.setVisible(true);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(frame, "JsonProcessingException (IDK)!");
+        }
     }
 
     private void followLink() {
@@ -131,7 +148,8 @@ public class UserDetailsWindow {
             JOptionPane.showMessageDialog(frame, "Please select a link to follow.");
             return;
         }
-        String shortUrl = (String) table.getValueAt(row, 3);
+        Long id = (Long) table.getValueAt(row, 0);
+        String shortUrl = Main.QR_URL + "/" + id;
         try {
             Desktop.getDesktop().browse(java.net.URI.create(shortUrl));
         } catch (Exception e) {
@@ -145,8 +163,9 @@ public class UserDetailsWindow {
             JOptionPane.showMessageDialog(frame, "Please select a link to download QR for.");
             return;
         }
-        String shortUrl = (String) table.getValueAt(row, 3);
-        String linkName = ""+ table.getValueAt(row, 0);
+        Long id = (Long) table.getValueAt(row, 0);
+        String shortUrl = Main.QR_URL + "/" + id;
+        String linkName = "" + table.getValueAt(row, 0);
         try {
             BufferedImage qrImage = Main.qrGenService.generateQrCodeImage(shortUrl);
             JFileChooser fileChooser = new JFileChooser();
@@ -169,7 +188,8 @@ public class UserDetailsWindow {
             JOptionPane.showMessageDialog(frame, "Please select a link to show QR for.");
             return;
         }
-        String shortUrl = (String) table.getValueAt(row, 3);
+        Long id = (Long) table.getValueAt(row, 0);
+        String shortUrl = Main.QR_URL + "/" + id;
         try {
             BufferedImage qrImage = Main.qrGenService.generateQrCodeImage(shortUrl);
             ImageIcon icon = new ImageIcon(qrImage);
@@ -186,7 +206,8 @@ public class UserDetailsWindow {
             JOptionPane.showMessageDialog(frame, "Please select a link to delete.");
             return;
         }
-
-        // todo delete link request to server
+        Long id = (Long) table.getValueAt(row, 0);
+        linkService.deleteLink(id);
+        ((LinksTableModel) table.getModel()).removeRow(row);
     }
 }
